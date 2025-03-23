@@ -1,0 +1,42 @@
+<!-- index.html actualizado -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión Lavado Vehículos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Sistema de Gestión de Lavado de Vehículos</h1>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <a href="{{ url_for('registro_vehiculo') }}" class="btn btn-primary btn-lg w-100">Registrar Vehículo</a>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('servicios') }}" class="btn btn-info btn-lg w-100">Ver Servicios Realizados</a>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('registrar_servicio') }}" class="btn btn-success btn-lg w-100">Registrar Servicio</a>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('registro_insumo') }}" class="btn btn-warning btn-lg w-100">Registrar Insumo</a>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('insumos') }}" class="btn btn-secondary btn-lg w-100">Ver Insumos</a>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('registrar_inventario') }}" class="btn btn-dark btn-lg w-100">Registrar Inventario</a>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('ver_inventario') }}" class="btn btn-outline-dark btn-lg w-100">Ver Inventario</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+

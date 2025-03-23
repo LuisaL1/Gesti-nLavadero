@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Servicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Registrar Nuevo Servicio</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="placa" class="form-label">Placa del Vehículo</label>
+            <input type="text" class="form-control" id="placa" name="placa" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="empleado_recibe" class="form-label">Empleado que recibe</label>
+            <select class="form-select" id="empleado_recibe" name="empleado_recibe" required>
+                {% for e in empleados %}
+                    <option value="{{ e.Id }}">{{ e.Nombre }} {{ e.Apellidos }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="empleado_lava" class="form-label">Empleado que lava</label>
+            <select class="form-select" id="empleado_lava" name="empleado_lava" required>
+                {% for e in empleados %}
+                    <option value="{{ e.Id }}">{{ e.Nombre }} {{ e.Apellidos }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="tipo_lavado" class="form-label">Tipo de Lavado</label>
+            <select class="form-select" id="tipo_lavado" name="tipo_lavado" required>
+                {% for t in tipos_lavado %}
+                    <option value="{{ t.Id }}">{{ t.Nombre }} - ${{ t.Precio }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="observaciones" class="form-label">Observaciones del Vehículo</label>
+            <textarea class="form-control" name="observaciones" id="observaciones" rows="4"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Registrar Servicio</button>
+    </form>
+</div>
+</body>
+</html>
