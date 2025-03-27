@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Servicios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Historial de Servicios por Vehículo</h2>
+
+    <form method="POST" class="mb-3">
+        <label for="placa" class="form-label">Placa del vehículo:</label>
+        <input type="text" name="placa" class="form-control" placeholder="Ej: ABC123" required>
+        <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+    </form>
+
+    {% if resultados %}
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Placa</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Tipo</th>
+                <th>Tipo Lavado</th>
+                <th>Fecha</th>
+                <th>Hora Recibe</th>
+                <th>Hora Entrega</th>
+                <th>Precio</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in resultados %}
+            <tr>
+                <td>{{ s.Id }}</td>
+                <td>{{ s.Placa }}</td>
+                <td>{{ s.Marca }}</td>
+                <td>{{ s.Modelo }}</td>
+                <td>{{ s.Tipo_Vehículo }}</td>
+                <td>{{ s.TipoLavado }}</td>
+                <td>{{ s.Fecha }}</td>
+                <td>{{ s.Hora_Recibe }}</td>
+                <td>{{ s.Hora_Entrega }}</td>
+                <td>${{ s.Precio }}</td>
+                <td>{{ s.Estado }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% elif placa %}
+    <p>No se encontraron servicios para la placa: <strong>{{ placa }}</strong></p>
+    {% endif %}
+</div>
+</body>
+</html>

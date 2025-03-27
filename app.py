@@ -290,6 +290,99 @@ def registrar_inventario():
     insumos = Insumo.query.all()  # Para desplegar en select
     return render_template('registro_inventario.html', insumos=insumos)
 
+@app.route('/asignar_turno', methods=['GET', 'POST'])
+def asignar_turno():
+    if request.method == 'POST':
+        empleado_id = request.form['empleado_id']
+        dia = request.form['dia']
+        jornada_id = request.form['jornada_id']
+
+        turno = TurnoEmpleado(Id_Empleado=empleado_id, Día=dia, Id_Jornada=jornada_id)
+        db.session.add(turno)
+        db.session.commit()
+        return redirect(url_for('ver_turnos'))
+
+    empleados = Empleado.query.all()
+    jornadas = Jornada.query.all()
+    return render_template('asignar_turno.html', empleados=empleados, jornadas=jornadas)
+
+@app.route('/vehiculos_fecha', methods=['GET', 'POST'])
+def vehiculos_atendidos_fecha():
+    resultados = []
+    fecha_seleccionada = None
+    if request.method == 'POST':
+        fecha_seleccionada = request.form['fecha']
+        resultados = db.session.execute(text("""
+            SELECT 
+                v.Placa,
+                v.Tipo_Vehículo,
+                tl.Nombre AS TipoLavado,
+                CONCAT(e1.Nombre, ' ', e1.Apellidos) AS Empleado_Recibe,
+                CONCAT(e2.Nombre, ' ', e2.Apellidos) AS Empleado_Lava,
+                s.Fecha
+            FROM servicios s
+            JOIN vehículos v ON s.Id_Tipovehículo = v.Id
+            JOIN tipo_lavado tl ON s.Id_TipoLavado = tl.Id
+            JOIN empleado e1 ON s.Id_Empleado_Recibe = e1.Id
+            JOIN empleado e2 ON s.Id_Empleado_Lava = e2.Id
+            WHERE s.Fecha = :fecha
+        """), {"fecha": fecha_seleccionada}).fetchall()
+    return render_template('vehiculos_fecha.html', resultados=resultados, fecha=fecha_seleccionada)
+
+@app.route('/servicios_pendientes')
+def servicios_pendientes():
+    resultados = db.session.execute(text("""
+        SELECT 
+            s.Id,
+            v.Placa,
+            v.Tipo_Vehículo,
+            tl.Nombre AS TipoLavado,
+            CONCAT(e1.Nombre, ' ', e1.Apellidos) AS Empleado_Recibe,
+            CONCAT(e2.Nombre, ' ', e2.Apellidos) AS Empleado_Lava,
+            s.Hora_Recibe,
+            s.Estado
+        FROM servicios s
+        JOIN vehículos v ON s.Id_Tipovehículo = v.Id
+        JOIN tipo_lavado tl ON s.Id_TipoLavado = tl.Id
+        JOIN empleado e1 ON s.Id_Empleado_Recibe = e1.Id
+        JOIN empleado e2 ON s.Id_Empleado_Lava = e2.Id
+        WHERE s.Estado = 'En proceso'
+        ORDER BY s.Hora_Recibe
+    """)).fetchall()
+    return render_template('servicios_pendientes.html', resultados=resultados)
+
+@app.route('/historial_servicios', methods=['GET', 'POST'])
+def historial_servicios():
+    resultados = []
+    placa = None
+    if request.method == 'POST':
+        placa = request.form['placa']
+        resultados = db.session.execute(text("""
+            SELECT 
+                s.Id,
+                s.Placa,
+                v.Marca,
+                v.Modelo,
+                v.Tipo_Vehículo,
+                tl.Nombre AS TipoLavado,
+                s.Fecha,
+                s.Hora_Recibe,
+                s.Hora_Entrega,
+                s.Precio,
+                s.Estado
+            FROM servicios s
+            JOIN vehículos v ON s.Id_Tipovehículo = v.Id
+            JOIN tipo_lavado tl ON s.Id_TipoLavado = tl.Id
+            WHERE s.Placa = :placa
+            ORDER BY s.Fecha DESC
+        """), {"placa": placa}).fetchall()
+    return render_template('historial_servicios.html', resultados=resultados, placa=placa)
+
+@app.route('/ver_turnos')
+def ver_turnos():
+    turnos = TurnoEmpleado.query.all()
+    return render_template('ver_turnos.html', turnos=turnos)
+
 def verificar_conexion():
     try:
         # Ejecutar una consulta simple
